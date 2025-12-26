@@ -42,7 +42,23 @@ class HomeScreen extends StatelessWidget {
               ),
               child: Stack(
                 children: [
-                  // Placeholder for image (optional for now based on plan)
+                  // Hero Image - Woman with product
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      ),
+                      child: Image.asset(
+                        'assets/images/hero_model.png',
+                        fit: BoxFit.cover,
+                        width: 150,
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: Column(
