@@ -151,7 +151,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     name: 'Greenling',
                     price: '\$150',
-                    imagePath: 'assets/images/product2.png',
+                    imagePath: 'assets/images/product2.jpg',
                     routeArgs: 'greenling-456',
                     isFavorite: false,
                   ),
@@ -199,10 +199,19 @@ class HomeScreen extends StatelessWidget {
               child: Stack(
                 children: [
                   Center(
-                    // Placeholder for image
-                    child: Container(
-                      color: Colors.grey[100],
-                      child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                      child: Image.asset(
+                        imagePath,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[100],
+                            child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Positioned(
