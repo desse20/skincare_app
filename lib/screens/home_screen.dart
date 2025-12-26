@@ -112,8 +112,37 @@ class HomeScreen extends StatelessWidget {
             ),
             
             const SizedBox(height: 24),
-            // Placeholder for next steps
-            const Center(child: Text("Featured Products coming soon...")),
+
+            // STEP 4: Featured Products
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: [
+                  _buildProductCard(
+                    context,
+                    name: 'Re:dence',
+                    price: '\$160',
+                    imagePath: 'assets/images/product1.png', 
+                    routeArgs: 'redence-123',
+                  ),
+                  _buildProductCard(
+                    context,
+                    name: 'Greenling',
+                    price: '\$150',
+                    imagePath: 'assets/images/product2.png',
+                    routeArgs: 'greenling-456',
+                    isFavorite: false,
+                  ),
+                ],
+              ),
+            ),
+             const SizedBox(height: 24),
           ],
         ),
       ),
@@ -122,23 +151,73 @@ class HomeScreen extends StatelessWidget {
         selectedItemColor: const Color(0xFFC1E14D),
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Favoris',
-          ),
-           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_basket_outlined),
-            label: 'Panier',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Profil',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.shopping_basket_outlined), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ''),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProductCard(BuildContext context, {
+    required String name,
+    required String price,
+    required String imagePath,
+    required String routeArgs,
+    bool isFavorite = true,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, AppRoutes.productDetail, arguments: routeArgs);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  Center(
+                    // Placeholder for image
+                    child: Container(
+                      color: Colors.grey[100],
+                      child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                    ),
+                  ),
+                  Positioned(
+                     right: 8,
+                     bottom: 8,
+                     child: CircleAvatar(
+                       radius: 14,
+                        backgroundColor: isFavorite ? const Color(0xFFC1E14D) : Colors.white,
+                        child: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          size: 16,
+                          color: isFavorite ? Colors.white : Colors.grey,
+                        ),
+                     ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 4),
+                  Text(price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
