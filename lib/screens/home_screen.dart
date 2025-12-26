@@ -76,8 +76,44 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-             // Placeholder for next steps
-            const Center(child: Text("Collections and Products coming soon...")),
+
+            // STEP 3: Collections Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Collections', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  TextButton(onPressed: () {}, child: const Text('See all', style: TextStyle(color: Colors.grey))),
+                ],
+              ),
+            ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.only(left: 16),
+              child: Row(
+                children: ['All', 'Women', 'Man', 'Kids', 'Parents'].map((category) {
+                  final isSelected = category == 'All';
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ChoiceChip(
+                      label: Text(category),
+                      selected: isSelected,
+                      onSelected: (_) {},
+                      selectedColor: const Color(0xFFC1E14D),
+                      backgroundColor: Colors.white,
+                      labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.grey),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      side: BorderSide.none,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            
+            const SizedBox(height: 24),
+            // Placeholder for next steps
+            const Center(child: Text("Featured Products coming soon...")),
           ],
         ),
       ),
