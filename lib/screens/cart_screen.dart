@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/custom_bottom_nav.dart';
-import '../routes/app_routes.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -12,7 +11,7 @@ class CartScreen extends StatelessWidget {
         title: const Text('Panier'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-           onPressed: () => Navigator.pushNamed(context, AppRoutes.home),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: const Center(child: Text('Cart Screen - À implémenter')),
