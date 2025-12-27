@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/custom_bottom_nav.dart';
 import '../routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -17,11 +18,17 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
-            onPressed: () {},
-          ),
+      icon: const Icon(Icons.search, color: Colors.black),
+      onPressed: () {
+        showSearch(
+          context: context,
+          delegate: SkincareSearchDelegate(),
+        );
+      },
+    ),
+          
           IconButton(
-            icon: const Icon(Icons.shopping_bag_outlined, color: Colors.black),
+            icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               Navigator.pushNamed(context, AppRoutes.cart);
             },
@@ -162,17 +169,10 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed, // Ensure icons are visible
-        selectedItemColor: const Color(0xFFC1E14D),
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.shopping_basket_outlined), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: ''),
-        ],
-      ),
+     
+
+            bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
+
     );
   }
 
@@ -246,4 +246,29 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+
+
+
+
+
+
+class SkincareSearchDelegate extends SearchDelegate {
+  @override
+  List<Widget>? buildActions(BuildContext context) => [
+    IconButton(icon: const Icon(Icons.clear), onPressed: () => query = '')
+  ];
+
+  @override
+  Widget? buildLeading(BuildContext context) => IconButton(
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () => close(context, null),
+  );
+
+  @override
+  Widget buildResults(BuildContext context) => Center(child: Text("Résultats pour $query"));
+
+  @override
+  Widget buildSuggestions(BuildContext context) => Container(); // Suggestions vides pour l'instant
 }
