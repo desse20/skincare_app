@@ -4,14 +4,22 @@ import '../screens/collections_screen.dart';
 import '../screens/product_detail_screen.dart';
 import '../screens/cart_screen.dart';
 import 'app_routes.dart';
+import '../models/favorites_model.dart';
+import '../models/product.dart';
 
 class RouteGenerator {
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  final FavoritesModel favoritesModel;
+
+  RouteGenerator({required this.favoritesModel});
+
+  Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.home:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(
+            builder: (_) => HomeScreen(favoritesModel: favoritesModel));
       case AppRoutes.collections:
-        return MaterialPageRoute(builder: (_) => const CollectionsScreen());
+        return MaterialPageRoute(
+            builder: (_) => CollectionsScreen(favoritesModel: favoritesModel));
       case AppRoutes.productDetail:
         final args = settings.arguments;
         if (args is String) {
