@@ -1,3 +1,8 @@
+import 'package:flutter/material.dart';
+import '../models/product.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
+
 
 import 'package:flutter/material.dart';
 import '../models/product.dart';
@@ -18,6 +23,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Product(
       id: '1',
       name: 'Re:dence',
+      price: '160',
+      images: ['assets/images/product1.png'],
       price: '160 €',
       images: [
         'assets/images/product1.png',
@@ -28,6 +35,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Product(
       id: '2',
       name: 'Greenling',
+      price: '150',
+      images: ['assets/images/product2.jpg'],
       price: '150 €',
       images: [
         'assets/images/product2.jpg',
@@ -43,6 +52,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   Widget build(BuildContext context) {
     final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts[0]);
     final similarProducts = allProducts.where((p) => p.id != product.id).toList();
+    const limeColor = Color(0xFFC1E14D);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name),
@@ -59,6 +70,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: PageView.builder(
               itemCount: product.images.length,
               itemBuilder: (context, index) {
+                return Image.asset(product.images[index], fit: BoxFit.cover);
                 return Image.asset(
                   product.images[index],
                   fit: BoxFit.cover,
@@ -72,6 +84,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(product.name, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                Text(product.capacity, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                const SizedBox(height: 8),
+                Text('${product.price} €', style: const TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold)),
                 Text(
                   product.name,
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -93,6 +110,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     const SizedBox(width: 12),
                     IconButton(
                       icon: const Icon(Icons.remove_circle_outline),
+                      onPressed: quantity > 1 ? () => setState(() => quantity--) : null,
+                    ),
+                    Text('$quantity', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       onPressed: quantity > 1
                           ? () => setState(() => quantity--)
                           : null,
@@ -109,6 +129,68 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
           const SizedBox(height: 16),
           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+            child: SizedBox(
+              width: double.infinity,
+              height: 55,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: limeColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                ),
+                onPressed: () {
+                
+                  context.read<CartProvider>().addToCart(product.id, quantity: quantity);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('$quantity x ${product.name} ajouté au panier !'),
+                      backgroundColor: Colors.black87,
+                    ),
+                  );
+                },
+                child: const Text('AJOUTER AU PANIER', style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ),
+          if (similarProducts.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Produits similaires', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 250,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: similarProducts.length,
+                      itemBuilder: (context, index) {
+                        final simProduct = similarProducts[index];
+                        return Container(
+                          width: 160,
+                          margin: const EdgeInsets.only(right: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.asset(simProduct.images[0], height: 160, width: 160, fit: BoxFit.cover),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(simProduct.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 4),
+                              Text('${simProduct.price} €', style: const TextStyle(fontSize: 14, color: Colors.green, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ExpansionTile(
               title: const Text('Product Details', style: TextStyle(fontWeight: FontWeight.bold)),
