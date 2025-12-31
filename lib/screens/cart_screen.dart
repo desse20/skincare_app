@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/custom_bottom_nav.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -13,9 +14,9 @@ class CartScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: const Center(
-        child: Text('Cart Screen - À implémenter'),
-      ),
+      body: const Center(child: Text('Cart Screen - À implémenter')),
+
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
     );
   }
 }
