@@ -51,6 +51,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 // STEP 2: Hero Section
                 Container(
+                  width: double.infinity,
                   margin: const EdgeInsets.all(16),
                   height: 200,
                   decoration: BoxDecoration(
