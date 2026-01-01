@@ -11,7 +11,7 @@ class CustomBottomNav extends StatelessWidget {
     if (index == 0) Navigator.pushReplacementNamed(context, AppRoutes.home);
     if (index == 2) Navigator.pushReplacementNamed(context, AppRoutes.cart);
     if (index == 1) Navigator.pushReplacementNamed(context, AppRoutes.collections);
-    if (index == 3) Navigator.pushReplacementNamed(context, AppRoutes.productDetail);
+    if (index == 3) Navigator.pushReplacementNamed(context, AppRoutes.profile);
   }
 
   @override
