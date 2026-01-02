@@ -4,15 +4,33 @@ import '../widgets/custom_bottom_nav.dart';
 import '../models/favorites_model.dart';
 import '../models/product.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final FavoritesModel favoritesModel;
 
   const HomeScreen({super.key, required this.favoritesModel});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _selectedCategory = 'All';
+
+  final List<String> _categories = ['All', 'Women', 'Man', 'Kids', 'Parents'];
+
+  List<Product> get _filteredProducts {
+    if (_selectedCategory == 'All') {
+      return Product.dummyProducts;
+    }
+    return Product.dummyProducts
+        .where((product) => product.category == _selectedCategory)
+        .toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: favoritesModel,
+      listenable: widget.favoritesModel,
       builder: (context, child) {
         return Scaffold(
           backgroundColor: Colors.grey[50], // Light background
@@ -81,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                               'New Collection for\nDelicate skin',
                               style: TextStyle(
                                 fontSize: 22,
-                                fontWeight: FontWeight.bold, // Using bold from remote/cleaner
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -120,19 +138,26 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.only(left: 16),
                   child: Row(
-                    children: ['All', 'Women', 'Man', 'Kids', 'Parents'].map((category) {
-                      final isSelected = category == 'All';
+                    children: _categories.map((category) {
+                      final isSelected = category == _selectedCategory;
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ChoiceChip(
                           label: Text(category),
                           selected: isSelected,
-                          onSelected: (_) {},
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() {
+                                _selectedCategory = category;
+                              });
+                            }
+                          },
                           selectedColor: const Color(0xFFC1E14D),
                           backgroundColor: Colors.white,
                           labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.grey),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           side: BorderSide.none,
+                          showCheckmark: false,
                         ),
                       );
                     }).toList(),
@@ -151,12 +176,12 @@ class HomeScreen extends StatelessWidget {
                     childAspectRatio: 0.75,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    children: Product.dummyProducts.map((product) {
+                    children: _filteredProducts.map((product) {
                       return _buildProductCard(
                         context,
                         product: product,
-                        isFavorite: favoritesModel.isFavorite(product.id),
-                        onFavoriteToggle: () => favoritesModel.toggleFavorite(product.id),
+                        isFavorite: widget.favoritesModel.isFavorite(product.id),
+                        onFavoriteToggle: () => widget.favoritesModel.toggleFavorite(product.id),
                       );
                     }).toList(),
                   ),
@@ -198,6 +223,10 @@ class HomeScreen extends StatelessWidget {
                       child: Image.asset(
                         product.images.first,
                         fit: BoxFit.cover,
+                        // Fix for error handling if image not found to avoid crash during dev
+                        errorBuilder: (context, error, stackTrace) {
+                           return const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey));
+                        },
                         width: double.infinity,
                       ),
                     ),
@@ -226,7 +255,7 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
                   Text(product.price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
                 ],

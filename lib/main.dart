@@ -4,7 +4,10 @@ import 'routes/route_generator.dart';
 import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/favorites_provider.dart';
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 import 'models/favorites_model.dart';
 
 void main() {
