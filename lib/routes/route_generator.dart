@@ -6,7 +6,7 @@ import '../screens/cart_screen.dart';
 import '../screens/profile_screen.dart';
 import 'app_routes.dart';
 import '../models/favorites_model.dart';
-import '../models/product.dart';
+
 
 class RouteGenerator {
   final FavoritesModel favoritesModel;
