@@ -21,6 +21,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       price: '160',
       images: ['assets/images/product1.png'],
       capacity: '250ml',
+      category: 'Women',
       description: 'Sérum anti-âge Re:dence, raffermit et illumine la peau.',
     ),
     Product(
@@ -29,6 +30,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       price: '150',
       images: ['assets/images/product2.jpg'],
       capacity: '200ml',
+      category: 'Women',
       description: 'Crème hydratante Greenling, fraîcheur et éclat naturel.',
     ),
   ];
