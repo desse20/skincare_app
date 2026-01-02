@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_bottom_nav.dart';
 import '../routes/app_routes.dart';
-
+import '../widgets/custom_bottom_nav.dart';
 import '../models/favorites_model.dart';
 import '../models/product.dart';
 
@@ -20,7 +19,11 @@ class HomeScreen extends StatelessWidget {
           appBar: AppBar(
             title: const Text(
               'Best Skincare',
-              style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.black, 
+                fontSize: 24, 
+                fontWeight: FontWeight.bold
+              ),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -35,7 +38,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.shopping_cart),
+                icon: const Icon(Icons.shopping_cart, color: Colors.black),
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.cart);
                 },
@@ -48,11 +51,12 @@ class HomeScreen extends StatelessWidget {
               children: [
                 // STEP 2: Hero Section
                 Container(
-                  margin: const EdgeInsets.all(16),
+                  width: double.infinity,
+                  // Removed margin for full width
                   height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC1E14D), // Lime green from mockup
-                    borderRadius: BorderRadius.circular(20),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFC1E14D), // Lime green from mockup
+                    // Removed borderRadius for full width look
                   ),
                   child: Stack(
                     children: [
@@ -61,16 +65,10 @@ class HomeScreen extends StatelessWidget {
                         right: 0,
                         bottom: 0,
                         top: 0,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          child: Image.asset(
-                            'assets/images/hero_model.png',
-                            fit: BoxFit.cover,
-                            width: 150,
-                          ),
+                        child: Image.asset(
+                          'assets/images/hero_model.png',
+                          fit: BoxFit.cover,
+                          width: 150,
                         ),
                       ),
                       Padding(
@@ -83,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                               'New Collection for\nDelicate skin',
                               style: TextStyle(
                                 fontSize: 22,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold, // Using bold from remote/cleaner
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -167,6 +165,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+         
           bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
         );
       }
@@ -200,12 +199,6 @@ class HomeScreen extends StatelessWidget {
                         product.images.first,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[100],
-                            child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -246,12 +239,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-
-
-
-
-
-
 class SkincareSearchDelegate extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) => [
@@ -268,5 +255,5 @@ class SkincareSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) => Center(child: Text("Résultats pour $query"));
 
   @override
-  Widget buildSuggestions(BuildContext context) => Container(); // Suggestions vides pour l'instant
+  Widget buildSuggestions(BuildContext context) => Container();
 }
