@@ -1,26 +1,47 @@
 import 'package:flutter/material.dart';
 import '../routes/app_routes.dart';
 import '../widgets/custom_bottom_nav.dart';
-
 import '../models/favorites_model.dart';
 import '../models/product.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final FavoritesModel favoritesModel;
 
   const HomeScreen({super.key, required this.favoritesModel});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _selectedCategory = 'All';
+
+  final List<String> _categories = ['All', 'Women', 'Man', 'Kids', 'Parents'];
+
+  List<Product> get _filteredProducts {
+    if (_selectedCategory == 'All') {
+      return Product.dummyProducts;
+    }
+    return Product.dummyProducts
+        .where((product) => product.category == _selectedCategory)
+        .toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: favoritesModel,
+      listenable: widget.favoritesModel,
       builder: (context, child) {
         return Scaffold(
           backgroundColor: Colors.grey[50], // Light background
           appBar: AppBar(
             title: const Text(
               'Best Skincare',
-              style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.black, 
+                fontSize: 24, 
+                fontWeight: FontWeight.bold
+              ),
             ),
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -35,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.shopping_cart),
+                icon: const Icon(Icons.shopping_cart, color: Colors.black),
                 onPressed: () {
                   Navigator.pushNamed(context, AppRoutes.cart);
                 },
@@ -49,11 +70,11 @@ class HomeScreen extends StatelessWidget {
                 // STEP 2: Hero Section
                 Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.all(16),
+                  // Removed margin for full width
                   height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC1E14D), // Lime green from mockup
-                    borderRadius: BorderRadius.circular(20),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFC1E14D), // Lime green from mockup
+                    // Removed borderRadius for full width look
                   ),
                   child: Stack(
                     children: [
@@ -62,16 +83,10 @@ class HomeScreen extends StatelessWidget {
                         right: 0,
                         bottom: 0,
                         top: 0,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          child: Image.asset(
-                            'assets/images/hero_model.png',
-                            fit: BoxFit.cover,
-                            width: 150,
-                          ),
+                        child: Image.asset(
+                          'assets/images/hero_model.png',
+                          fit: BoxFit.cover,
+                          width: 150,
                         ),
                       ),
                       Padding(
@@ -84,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                               'New Collection for\nDelicate skin',
                               style: TextStyle(
                                 fontSize: 22,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -123,19 +138,26 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.only(left: 16),
                   child: Row(
-                    children: ['All', 'Women', 'Man', 'Kids', 'Parents'].map((category) {
-                      final isSelected = category == 'All';
+                    children: _categories.map((category) {
+                      final isSelected = category == _selectedCategory;
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ChoiceChip(
                           label: Text(category),
                           selected: isSelected,
-                          onSelected: (_) {},
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() {
+                                _selectedCategory = category;
+                              });
+                            }
+                          },
                           selectedColor: const Color(0xFFC1E14D),
                           backgroundColor: Colors.white,
                           labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.grey),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                           side: BorderSide.none,
+                          showCheckmark: false,
                         ),
                       );
                     }).toList(),
@@ -154,12 +176,12 @@ class HomeScreen extends StatelessWidget {
                     childAspectRatio: 0.75,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
-                    children: Product.dummyProducts.map((product) {
+                    children: _filteredProducts.map((product) {
                       return _buildProductCard(
                         context,
                         product: product,
-                        isFavorite: favoritesModel.isFavorite(product.id),
-                        onFavoriteToggle: () => favoritesModel.toggleFavorite(product.id),
+                        isFavorite: widget.favoritesModel.isFavorite(product.id),
+                        onFavoriteToggle: () => widget.favoritesModel.toggleFavorite(product.id),
                       );
                     }).toList(),
                   ),
@@ -168,6 +190,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+         
           bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
         );
       }
@@ -200,13 +223,11 @@ class HomeScreen extends StatelessWidget {
                       child: Image.asset(
                         product.images.first,
                         fit: BoxFit.cover,
-                        width: double.infinity,
+                        // Fix for error handling if image not found to avoid crash during dev
                         errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[100],
-                            child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                          );
+                           return const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey));
                         },
+                        width: double.infinity,
                       ),
                     ),
                   ),
@@ -234,7 +255,7 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
                   Text(product.price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
                 ],
@@ -263,5 +284,5 @@ class SkincareSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) => Center(child: Text("Résultats pour $query"));
 
   @override
-  Widget buildSuggestions(BuildContext context) => Container(); // Suggestions vides pour l'instant
+  Widget buildSuggestions(BuildContext context) => Container();
 }
