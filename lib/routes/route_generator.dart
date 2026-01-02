@@ -3,6 +3,7 @@ import '../screens/home_screen.dart';
 import '../screens/collections_screen.dart';
 import '../screens/product_detail_screen.dart';
 import '../screens/cart_screen.dart';
+import '../screens/profile_screen.dart';
 import 'app_routes.dart';
 import '../models/favorites_model.dart';
 import '../models/product.dart';
@@ -30,6 +31,8 @@ class RouteGenerator {
         return _errorRoute();
       case AppRoutes.cart:
         return MaterialPageRoute(builder: (_) => const CartScreen());
+      case AppRoutes.profile:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
       default:
         return _errorRoute();
     }

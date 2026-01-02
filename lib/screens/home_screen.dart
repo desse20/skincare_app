@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_bottom_nav.dart';
 import '../routes/app_routes.dart';
-
+import '../widgets/custom_bottom_nav.dart';
 import '../models/favorites_model.dart';
-import '../models/product.dart';
 
 class HomeScreen extends StatelessWidget {
   final FavoritesModel favoritesModel;
@@ -12,100 +10,91 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: favoritesModel,
-      builder: (context, child) {
-        return Scaffold(
-          backgroundColor: Colors.grey[50], // Light background
-          appBar: AppBar(
-            title: const Text(
-              'Best Skincare',
-              style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.search, color: Colors.black),
-                onPressed: () {
-                  showSearch(
-                    context: context,
-                    delegate: SkincareSearchDelegate(),
-                  );
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.cart);
-                },
-              ),
-            ],
+    return Scaffold(
+      backgroundColor: Colors.grey[50], // Light background
+      appBar: AppBar(
+        title: const Text(
+          'Best Skincare',
+          style: TextStyle(color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+      icon: const Icon(Icons.search, color: Colors.black),
+      onPressed: () {
+        showSearch(
+          context: context,
+          delegate: SkincareSearchDelegate(),
+        );
+      },
+    ),
+          
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.cart);
+            },
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // STEP 2: Hero Section
-                Container(
-                  margin: const EdgeInsets.all(16),
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFC1E14D), // Lime green from mockup
-                    borderRadius: BorderRadius.circular(20),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // STEP 2: Hero Section
+            Container(
+              width: double.infinity,
+              height: 200,
+              decoration: const BoxDecoration(
+                color: Color(0xFFC1E14D), // Lime green from mockup
+              ),
+              child: Stack(
+                children: [
+                  // Hero Image - Woman with product
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                    child: Image.asset(
+                      'assets/images/hero_model.png',
+                      fit: BoxFit.cover,
+                      width: 150,
+                    ),
                   ),
-                  child: Stack(
-                    children: [
-                      // Hero Image - Woman with product
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        top: 0,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          child: Image.asset(
-                            'assets/images/hero_model.png',
-                            fit: BoxFit.cover,
-                            width: 150,
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'New Collection for\nDelicate skin',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'New Collection for\nDelicate skin',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                              ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                             Navigator.pushNamed(context, AppRoutes.collections);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.collections);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                              ),
-                              child: const Text('Shop Now', style: TextStyle(color: Colors.white)),
-                            ),
-                          ],
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          ),
+                          child: const Text('Shop Now', style: TextStyle(color: Colors.white)),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                ],
+              ),
+            ),
 
                 // STEP 3: Collections Section
                 Padding(
@@ -143,44 +132,57 @@ class HomeScreen extends StatelessWidget {
                 
                 const SizedBox(height: 24),
 
-                // STEP 4: Featured Products
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.75,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    children: Product.dummyProducts.map((product) {
-                      return _buildProductCard(
-                        context,
-                        product: product,
-                        isFavorite: favoritesModel.isFavorite(product.id),
-                        onFavoriteToggle: () => favoritesModel.toggleFavorite(product.id),
-                      );
-                    }).toList(),
+            // STEP 4: Featured Products
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                childAspectRatio: 0.75,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: [
+                  _buildProductCard(
+                    context,
+                    name: 'Re:dence',
+                    price: '160 €',
+                    imagePath: 'assets/images/product1.png',
+                    routeArgs: '1',
                   ),
-                ),
-                 const SizedBox(height: 24),
-              ],
+                  _buildProductCard(
+                    context,
+                    name: 'Greenling',
+                    price: '150 €',
+                    imagePath: 'assets/images/product2.jpg',
+                    routeArgs: '2',
+                    isFavorite: false,
+                  ),
+                ],
+              ),
             ),
-          ),
-          bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
-        );
-      }
+             const SizedBox(height: 24),
+          ],
+        ),
+      ),
+     
+
+            bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
+
     );
   }
 
   Widget _buildProductCard(BuildContext context, {
-    required Product product,
-    required bool isFavorite,
-    required VoidCallback onFavoriteToggle,
+    required String name,
+    required String price,
+    required String imagePath,
+    required String routeArgs,
+    bool isFavorite = false,
+    VoidCallback? onFavoriteToggle,
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AppRoutes.productDetail, arguments: product.id);
+        Navigator.pushNamed(context, AppRoutes.productDetail, arguments: routeArgs);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -197,15 +199,9 @@ class HomeScreen extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                       child: Image.asset(
-                        product.images.first,
+                        imagePath,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[100],
-                            child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                          );
-                        },
                       ),
                     ),
                   ),
@@ -233,9 +229,9 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   const SizedBox(height: 4),
-                  Text(product.price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                  Text(price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
                 ],
               ),
             ),
@@ -245,12 +241,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
 
 class SkincareSearchDelegate extends SearchDelegate {
   @override
@@ -268,5 +258,5 @@ class SkincareSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) => Center(child: Text("Résultats pour $query"));
 
   @override
-  Widget buildSuggestions(BuildContext context) => Container(); // Suggestions vides pour l'instant
+  Widget buildSuggestions(BuildContext context) => Container();
 }
