@@ -24,22 +24,18 @@ class Product {
       price: '160 €',
       images: ['assets/images/product1.png'],
       capacity: '50ml',
-<<<<<<< HEAD
-=======
+
       category: 'Women',
->>>>>>> home-ui
+
       description: 'A powerful serum for skin rejuvenation.',
     ),
+    
     Product(
       id: '2',
       name: 'Greenling',
       price: '150 €',
       images: ['assets/images/product2.jpg'],
       capacity: '30ml',
-<<<<<<< HEAD
-      description: 'Ideally suited for sensitive skin types.',
-    ),
-=======
       category: 'Women',
       description: 'Ideally suited for sensitive skin types.',
     ),
@@ -79,6 +75,6 @@ class Product {
       category: 'Women',
       description: 'Radiance boosting serum.',
     ),
->>>>>>> home-ui
+
   ];
 }

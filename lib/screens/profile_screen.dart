@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/custom_bottom_nav.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -34,7 +35,9 @@ class ProfileScreen extends StatelessWidget {
                     backgroundColor: Colors.white,
                     child: const CircleAvatar(
                       radius: 56,
-                      backgroundImage: AssetImage('assets/images/hero_model.png'),
+                      backgroundImage: AssetImage(
+                        'assets/images/hero_model.png',
+                      ),
                     ),
                   ),
                 ),
@@ -80,18 +83,28 @@ class ProfileScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: ListTile(
-                      leading: const Icon(Icons.shopping_bag, color: Colors.black87),
+                      leading: const Icon(
+                        Icons.shopping_bag,
+                        color: Colors.black87,
+                      ),
                       title: const Text('Mes commandes'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {},
                     ),
                   ),
                   Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: ListTile(
-                      leading: const Icon(Icons.favorite, color: Colors.redAccent),
+                      leading: const Icon(
+                        Icons.favorite,
+                        color: Colors.redAccent,
+                      ),
                       title: const Text('Mes favoris'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {},
@@ -104,6 +117,7 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 3),
     );
   }
 }
@@ -112,7 +126,11 @@ class _ProfileActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const _ProfileActionButton({required this.icon, required this.label, required this.onTap});
+  const _ProfileActionButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -269,20 +269,73 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class SkincareSearchDelegate extends SearchDelegate {
+  // 1. Accès à la liste des produits
+  final List<Product> products = Product.dummyProducts;
+
   @override
   List<Widget>? buildActions(BuildContext context) => [
-    IconButton(icon: const Icon(Icons.clear), onPressed: () => query = '')
-  ];
+        if (query.isNotEmpty)
+          IconButton(
+            icon: const Icon(Icons.clear),
+            onPressed: () => query = '',
+          )
+      ];
 
   @override
   Widget? buildLeading(BuildContext context) => IconButton(
-    icon: const Icon(Icons.arrow_back),
-    onPressed: () => close(context, null),
-  );
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => close(context, null),
+      );
 
+  // Ce qui s'affiche quand on appuie sur "Entrée"
   @override
-  Widget buildResults(BuildContext context) => Center(child: Text("Résultats pour $query"));
+  Widget buildResults(BuildContext context) => _showSearchResults(context);
 
+  // Ce qui s'affiche pendant qu'on tape
   @override
-  Widget buildSuggestions(BuildContext context) => Container();
+  Widget buildSuggestions(BuildContext context) => _showSearchResults(context);
+
+  // Fonction commune pour filtrer et afficher
+  Widget _showSearchResults(BuildContext context) {
+    // Filtrage insensible à la casse
+    final suggestions = products.where((product) {
+      final nameLower = product.name.toLowerCase();
+      final queryLower = query.toLowerCase();
+      return nameLower.contains(queryLower);
+    }).toList();
+
+    if (suggestions.isEmpty) {
+      return const Center(
+        child: Text("Aucun produit ne correspond à votre recherche."),
+      );
+    }
+
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final product = suggestions[index];
+        return ListTile(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              product.images.first,
+              width: 50,
+              height: 50,
+              fit: BoxFit.cover,
+            ),
+          ),
+          title: Text(product.name),
+          subtitle: Text(product.price),
+          onTap: () {
+            // Navigation vers le détail
+            Navigator.pushNamed(
+              context,
+              AppRoutes.productDetail,
+              arguments: product.id,
+            );
+          },
+        );
+      },
+    );
+  }
 }
