@@ -21,16 +21,6 @@ class CollectionsScreen extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: Colors.grey[50],
-          // appBar: AppBar(
-          //   title: const Text('My Favorites'),
-          //   backgroundColor: Colors.white,
-          //   foregroundColor: Colors.black,
-          //   elevation: 0,
-          //   leading: IconButton(
-          //     icon: const Icon(Icons.arrow_back),
-          //     onPressed: () => Navigator.pop(context),
-          //   ),
-          // ),
           appBar: const CustomAppBar(
             title: 'My Favorites',
             showBackButton: true, 
