@@ -6,11 +6,13 @@ import '../providers/cart_provider.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showCart;
+  final bool showBackButton;
 
   const CustomAppBar({
-    super.key, 
-    required this.title, 
-    this.showCart = true, // Par défaut, on affiche le panier
+    super.key,
+    required this.title,
+    this.showCart = true,
+    this.showBackButton = true,
   });
 
   @override
@@ -18,13 +20,45 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     int count = context.watch<CartProvider>().totalCount;
     return AppBar(
       title: Text(
-        title, 
-        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black)
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
       ),
       centerTitle: true,
       backgroundColor: Colors.white,
       elevation: 0,
       iconTheme: const IconThemeData(color: Colors.black),
+
+      // leading: showBackButton
+      //     ? IconButton(
+      //         icon: const Icon(
+      //           Icons.arrow_back_ios_new,
+      //           size: 20,
+      //         ), // Flèche élégante
+      //         onPressed: () => Navigator.of(context).pop(),
+      //       )
+      //     : null,
+
+// On utilise automaticallyImplyLeading: false pour reprendre le contrôle total
+      automaticallyImplyLeading: false, 
+      leading: showBackButton
+          ? IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 20,
+              ),
+              onPressed: () {
+                // On vérifie si on peut fermer la page, sinon on force le retour à l'accueil
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                } else {
+                  Navigator.of(context).pushReplacementNamed('/'); 
+                }
+              },
+            )
+          : null,
       actions: [
         if (showCart)
           Stack(
@@ -32,9 +66,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.shopping_cart_outlined),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () {
+                   Navigator.pushNamed(context, '/cart'); 
+                },
               ),
-              if (count > 0) // On n'affiche le badge que si le panier n'est pas vide
+              if (count >
+                  0) 
                 Positioned(
                   right: 8,
                   top: 8,
@@ -63,8 +100,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
       ],
     );
-
-  }  
+  }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

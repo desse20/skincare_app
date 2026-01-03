@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/favorites_provider.dart';
 import '../widgets/custom_app_bar.dart';
+import '../widgets/custom_bottom_nav.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({super.key});
@@ -21,16 +22,22 @@ class FavoritesScreen extends StatelessWidget {
               itemCount: favoriteIds.length,
               itemBuilder: (ctx, i) {
                 final productId = favoriteIds[i];
-                
+
                 return Card(
                   elevation: 2,
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 5,
+                  ),
                   child: ListTile(
                     leading: const Icon(Icons.favorite, color: Colors.red),
                     title: Text("Produit $productId"),
                     subtitle: const Text("Ajouté à vos coups de cœur"),
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.grey),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: Colors.grey,
+                      ),
                       onPressed: () {
                         // On retire des favoris au clic sur la poubelle
                         favoritesProvider.toggleFavorite(productId);
@@ -44,6 +51,7 @@ class FavoritesScreen extends StatelessWidget {
                 );
               },
             ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 
@@ -57,7 +65,11 @@ class FavoritesScreen extends StatelessWidget {
           const SizedBox(height: 16),
           const Text(
             "Aucun favori pour le moment",
-            style: TextStyle(fontSize: 16, color: Colors.grey, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+              fontWeight: FontWeight.w500,
+            ),
           ),
           const SizedBox(height: 8),
           const Text("Parcourez nos produits et cliquez sur le cœur !"),

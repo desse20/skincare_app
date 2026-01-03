@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
-import '../data/product_data.dart'; 
+import '../data/product_data.dart';
 import '../models/product.dart';
+import '../widgets/custom_bottom_nav.dart';
+import '../widgets/custom_app_bar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -10,19 +12,18 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = context.watch<CartProvider>();
-    const limeColor = Color(0xFFC1E14D); 
+    const limeColor = Color(0xFFC1E14D);
 
     // On utilise skincareProducts pour calculer le total
     double total = cart.getTotalAmount(skincareProducts);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: const Text("Mon Panier", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+
+      appBar: const CustomAppBar(
+        title: "Mon Panier",
+        showBackButton: true, 
+        showCart: false, 
       ),
       body: cart.items.isEmpty
           ? const Center(child: Text("Votre panier est vide"))
@@ -44,7 +45,10 @@ class CartScreen extends StatelessWidget {
                       }
 
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -53,15 +57,26 @@ class CartScreen extends StatelessWidget {
                           contentPadding: const EdgeInsets.all(12),
                           leading: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: info != null 
-                              ? Image.asset(info.images[0], width: 60, height: 60, fit: BoxFit.cover)
-                              : const Icon(Icons.image, size: 50),
+                            child: info != null
+                                ? Image.asset(
+                                    info.images[0],
+                                    width: 60,
+                                    height: 60,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Icon(Icons.image, size: 50),
                           ),
-                          title: Text(info?.name ?? "Produit $id", style: const TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Text("Quantité : $qty"), 
+                          title: Text(
+                            info?.name ?? "Produit $id",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text("Quantité : $qty"),
                           trailing: Text(
                             "${((double.tryParse(info?.price ?? '0') ?? 0) * qty).toInt()} €",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
                           ),
                         ),
                       );
@@ -71,10 +86,17 @@ class CartScreen extends StatelessWidget {
                 _buildTotalSection(context, cart, total, limeColor),
               ],
             ),
+
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
     );
   }
 
-  Widget _buildTotalSection(BuildContext context, CartProvider cart, double total, Color color) {
+  Widget _buildTotalSection(
+    BuildContext context,
+    CartProvider cart,
+    double total,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: const BoxDecoration(
@@ -87,8 +109,17 @@ class CartScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Total à payer", style: TextStyle(fontSize: 16, color: Colors.grey)),
-              Text("${total.toInt()} €", style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const Text(
+                "Total à payer",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              Text(
+                "${total.toInt()} €",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -98,15 +129,24 @@ class CartScreen extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: color,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 elevation: 0,
               ),
-              onPressed: total > 0 ? () {
-                cart.clearCart(); // Vider le panier
-                _showSuccess(context);
-              } : null,
-              child: const Text("PROCÉDER AU PAIEMENT", 
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+              onPressed: total > 0
+                  ? () {
+                      cart.clearCart(); // Vider le panier
+                      _showSuccess(context);
+                    }
+                  : null,
+              child: const Text(
+                "PROCÉDER AU PAIEMENT",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
         ],
@@ -122,8 +162,8 @@ class CartScreen extends StatelessWidget {
         content: const Text("Paiement validé !"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, '/'), 
-            child: const Text("OK", style: TextStyle(color: Color(0xFFC1E14D)))
+            onPressed: () => Navigator.pushReplacementNamed(context, '/'),
+            child: const Text("OK", style: TextStyle(color: Color(0xFFC1E14D))),
           ),
         ],
       ),
