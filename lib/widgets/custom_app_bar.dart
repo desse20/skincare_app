@@ -31,17 +31,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       iconTheme: const IconThemeData(color: Colors.black),
 
-      // leading: showBackButton
-      //     ? IconButton(
-      //         icon: const Icon(
-      //           Icons.arrow_back_ios_new,
-      //           size: 20,
-      //         ), // Flèche élégante
-      //         onPressed: () => Navigator.of(context).pop(),
-      //       )
-      //     : null,
-
-// On utilise automaticallyImplyLeading: false pour reprendre le contrôle total
       automaticallyImplyLeading: false, 
       leading: showBackButton
           ? IconButton(
