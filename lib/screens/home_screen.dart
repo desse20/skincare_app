@@ -352,7 +352,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    product.price,
+                    '${product.price} €',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -423,7 +423,7 @@ class SkincareSearchDelegate extends SearchDelegate {
             ),
           ),
           title: Text(product.name),
-          subtitle: Text(product.price),
+          subtitle: Text('${product.price} €'),
           onTap: () {
             // Navigation vers le détail
             Navigator.pushNamed(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../routes/app_routes.dart';
 import '../widgets/custom_bottom_nav.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_provider.dart';
@@ -123,26 +124,14 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     child: ListTile(
                       leading: const Icon(
-                        Icons.shopping_bag,
-                        color: Colors.black87,
-                      ),
-                      title: const Text('Mes commandes'),
-                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {},
-                    ),
-                  ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(
                         Icons.favorite,
                         color: Colors.redAccent,
                       ),
                       title: const Text('Mes favoris'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed(AppRoutes.collections);
+                      },
                     ),
                   ),
                 ],
