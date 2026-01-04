@@ -21,8 +21,14 @@ class CartProvider with ChangeNotifier {
     double total = 0.0;
     _items.forEach((productId, quantity) {
       try {
-        final product = allProducts.firstWhere((p) => p.id == productId);
-        double priceValue = double.tryParse(product.price) ?? 0.0;
+  
+      final product = allProducts.firstWhere(
+        (p) => p.id.toString() == productId.toString()
+      );
+      
+      String cleanPrice = product.price.replaceAll('€', '').trim();
+      double priceValue = double.tryParse(cleanPrice) ?? 0.0;
+      
         total += (priceValue * quantity);
       } catch (e) {
         debugPrint("Produit non trouvé : $productId");
