@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/favorites_provider.dart';
 import 'models/favorites_model.dart';
+import 'providers/user_provider.dart';
 
 void main() {
   runApp(
@@ -12,6 +13,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => FavoritesProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: const MyApp(),
     ),
