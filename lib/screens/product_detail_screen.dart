@@ -13,27 +13,8 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  // Liste simulée de produits
-  final List<Product> allProducts = [
-    Product(
-      id: '1',
-      name: 'Re:dence',
-      price: '160',
-      images: ['assets/images/product1.png'],
-      capacity: '250ml',
-      category: 'Women',
-      description: 'Sérum anti-âge Re:dence, raffermit et illumine la peau.',
-    ),
-    Product(
-      id: '2',
-      name: 'Greenling',
-      price: '150',
-      images: ['assets/images/product2.jpg'],
-      capacity: '200ml',
-      category: 'Women',
-      description: 'Crème hydratante Greenling, fraîcheur et éclat naturel.',
-    ),
-  ];
+  // Utilise la liste globale de produits
+  List<Product> get allProducts => Product.dummyProducts;
 
   int quantity = 1;
 
@@ -184,30 +165,62 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 itemCount: similarProducts.length,
                 itemBuilder: (context, index) {
                   final simProduct = similarProducts[index];
-                  return Container(
-                    width: 160,
-                    margin: const EdgeInsets.only(right: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            simProduct.images[0],
-                            height: 140,
-                            width: 160,
-                            fit: BoxFit.cover,
+                  return GestureDetector(
+                    onTap: () {
+                      context.read<CartProvider>().addToCart(simProduct.id, quantity: 1);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('1 x ${simProduct.name} ajouté au panier !'),
+                          backgroundColor: Colors.black87,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: 160,
+                      margin: const EdgeInsets.only(right: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              simProduct.images[0],
+                              height: 140,
+                              width: 160,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          simProduct.name,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text('${simProduct.price} €', style: const TextStyle(color: Colors.green)),
-                      ],
+                          const SizedBox(height: 8),
+                          Text(
+                            simProduct.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text('${simProduct.price} €', style: const TextStyle(color: Colors.green)),
+                          const SizedBox(height: 8),
+                          Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color(0xFFC1E14D),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                              ),
+                              onPressed: () {
+                                context.read<CartProvider>().addToCart(simProduct.id, quantity: 1);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('1 x ${simProduct.name} ajouté au panier !'),
+                                    backgroundColor: Colors.black87,
+                                  ),
+                                );
+                              },
+                              child: const Text('Ajouter', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
