@@ -3,6 +3,8 @@ import '../routes/app_routes.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../models/favorites_model.dart';
 import '../models/product.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final FavoritesModel favoritesModel;
@@ -38,9 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text(
               'Best Skincare',
               style: TextStyle(
-                color: Colors.black, 
-                fontSize: 24, 
-                fontWeight: FontWeight.bold
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
             backgroundColor: Colors.transparent,
@@ -55,10 +57,51 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.shopping_cart, color: Colors.black),
-                onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.cart);
+              Consumer<CartProvider>(
+                builder: (context, cart, child) {
+                  // On récupère la quantité totale (ex: 4 sérums + 1 crème = 5)
+                  final totalQuantity = cart.totalCount;
+
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.shopping_cart,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, AppRoutes.cart);
+                        },
+                      ),
+                      if (totalQuantity >
+                          0) // On affiche le badge seulement s'il y a des articles
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFC1E14D), // Ton vert lime
+                              shape: BoxShape.circle,
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            child: Text(
+                              '$totalQuantity', // On affiche la quantité totale ici
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
                 },
               ),
             ],
@@ -105,16 +148,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.collections);
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.collections,
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 24,
+                                  vertical: 12,
+                                ),
                               ),
-                              child: const Text('Shop Now', style: TextStyle(color: Colors.white)),
+                              child: const Text(
+                                'Shop Now',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ],
                         ),
@@ -129,8 +181,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Collections', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      TextButton(onPressed: () {}, child: const Text('See all', style: TextStyle(color: Colors.grey))),
+                      const Text(
+                        'Collections',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'See all',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -154,8 +218,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           selectedColor: const Color(0xFFC1E14D),
                           backgroundColor: Colors.white,
-                          labelStyle: TextStyle(color: isSelected ? Colors.black : Colors.grey),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.black : Colors.grey,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           side: BorderSide.none,
                           showCheckmark: false,
                         ),
@@ -163,7 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }).toList(),
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
 
                 // STEP 4: Featured Products
@@ -180,31 +248,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       return _buildProductCard(
                         context,
                         product: product,
-                        isFavorite: widget.favoritesModel.isFavorite(product.id),
-                        onFavoriteToggle: () => widget.favoritesModel.toggleFavorite(product.id),
+                        isFavorite: widget.favoritesModel.isFavorite(
+                          product.id,
+                        ),
+                        onFavoriteToggle: () =>
+                            widget.favoritesModel.toggleFavorite(product.id),
                       );
                     }).toList(),
                   ),
                 ),
-                 const SizedBox(height: 24),
+                const SizedBox(height: 24),
               ],
             ),
           ),
-         
+
           bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
         );
-      }
+      },
     );
   }
 
-  Widget _buildProductCard(BuildContext context, {
+  Widget _buildProductCard(
+    BuildContext context, {
     required Product product,
     required bool isFavorite,
     required VoidCallback onFavoriteToggle,
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AppRoutes.productDetail, arguments: product.id);
+        Navigator.pushNamed(
+          context,
+          AppRoutes.productDetail,
+          arguments: product.id,
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -219,34 +295,44 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Center(
                     child: ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
                       child: Image.asset(
                         product.images.first,
                         fit: BoxFit.cover,
                         // Fix for error handling if image not found to avoid crash during dev
                         errorBuilder: (context, error, stackTrace) {
-                           return const Center(child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey));
+                          return const Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          );
                         },
                         width: double.infinity,
                       ),
                     ),
                   ),
                   Positioned(
-                     right: 8,
-                     bottom: 8,
-                     child: GestureDetector(
-                       onTap: onFavoriteToggle,
-                       child: CircleAvatar(
-                         radius: 14,
-                          backgroundColor: isFavorite ? const Color(0xFFC1E14D) : Colors.white,
-                          child: Icon(
-                            isFavorite ? Icons.favorite : Icons.favorite_border,
-                            size: 16,
-                            color: isFavorite ? Colors.white : Colors.grey,
-                          ),
-                       ),
-                     ),
-                  )
+                    right: 8,
+                    bottom: 8,
+                    child: GestureDetector(
+                      onTap: onFavoriteToggle,
+                      child: CircleAvatar(
+                        radius: 14,
+                        backgroundColor: isFavorite
+                            ? const Color(0xFFC1E14D)
+                            : Colors.white,
+                        child: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          size: 16,
+                          color: isFavorite ? Colors.white : Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -255,9 +341,24 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   const SizedBox(height: 4),
-                  Text(product.price, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                  Text(
+                    product.price,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -274,18 +375,15 @@ class SkincareSearchDelegate extends SearchDelegate {
 
   @override
   List<Widget>? buildActions(BuildContext context) => [
-        if (query.isNotEmpty)
-          IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () => query = '',
-          )
-      ];
+    if (query.isNotEmpty)
+      IconButton(icon: const Icon(Icons.clear), onPressed: () => query = ''),
+  ];
 
   @override
   Widget? buildLeading(BuildContext context) => IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => close(context, null),
-      );
+    icon: const Icon(Icons.arrow_back),
+    onPressed: () => close(context, null),
+  );
 
   // Ce qui s'affiche quand on appuie sur "Entrée"
   @override
