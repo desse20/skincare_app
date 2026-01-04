@@ -127,7 +127,7 @@ class CollectionsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    product.price,
+                    '${product.price} €',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,

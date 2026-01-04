@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
-import '../data/product_data.dart';
+// import '../data/product_data.dart';
 import '../models/product.dart';
 import '../widgets/custom_bottom_nav.dart';
 import '../widgets/custom_app_bar.dart';
@@ -14,8 +14,8 @@ class CartScreen extends StatelessWidget {
     final cart = context.watch<CartProvider>();
     const limeColor = Color(0xFFC1E14D);
 
-    // On utilise skincareProducts pour calculer le total
-    double total = cart.getTotalAmount(skincareProducts);
+    // On utilise Product.dummyProducts pour calculer le total
+    double total = cart.getTotalAmount(Product.dummyProducts);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -39,7 +39,7 @@ class CartScreen extends StatelessWidget {
                       // Recherche dans skincareProducts
                       Product? info;
                       try {
-                        info = skincareProducts.firstWhere((p) => p.id == id);
+                        info = Product.dummyProducts.firstWhere((p) => p.id == id);
                       } catch (e) {
                         info = null;
                       }

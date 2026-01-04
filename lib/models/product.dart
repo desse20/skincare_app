@@ -21,7 +21,7 @@ class Product {
     Product(
       id: '1',
       name: 'Re:dence',
-      price: '160 €',
+      price: '160',
       images: ['assets/images/product1.png'],
       capacity: '50ml',
 
@@ -33,7 +33,7 @@ class Product {
     Product(
       id: '2',
       name: 'Greenling',
-      price: '150 €',
+      price: '150',
       images: ['assets/images/product2.jpg'],
       capacity: '30ml',
       category: 'Women',
@@ -42,7 +42,7 @@ class Product {
     Product(
       id: '3',
       name: 'Men Face Wash',
-      price: '45 €',
+      price: '45',
       images: ['assets/images/product_man.png'],
       capacity: '100ml',
       category: 'Man',
@@ -51,7 +51,7 @@ class Product {
     Product(
       id: '4',
       name: 'Baby Lotion',
-      price: '25 €',
+      price: '25',
       images: ['assets/images/product_kids.png'],
       capacity: '200ml',
       category: 'Kids',
@@ -60,7 +60,7 @@ class Product {
     Product(
       id: '5',
       name: 'Family Cream',
-      price: '60 €',
+      price: '60',
       images: ['assets/images/product_parents.png'],
       capacity: '450ml',
       category: 'Parents',
@@ -69,7 +69,7 @@ class Product {
     Product(
       id: '6',
       name: 'Lumière Serum',
-      price: '180 €',
+      price: '180',
       images: ['assets/images/product_women.png'],
       capacity: '30ml',
       category: 'Women',
